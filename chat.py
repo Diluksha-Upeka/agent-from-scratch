@@ -8,6 +8,7 @@ load_dotenv()
 
 # Initialize the client
 client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY"),
     http_options=types.HttpOptions(
         retry_options=types.HttpRetryOptions(
             initial_delay=2.0,       # Start with a 2-second sleep
@@ -18,7 +19,11 @@ client = genai.Client(
     )
 )
 
-MODELS = ['gemini-3.5-flash', 'gemini-2.0-flash-lite']
+MODELS = [
+    'gemini-3.6-flash',       # newest, confirmed working
+    'gemini-3.5-flash-lite',  # confirmed working
+    'gemini-3.1-flash-lite',  # confirmed working
+]
 REQUEST_TIMEOUT = 15_000  # 15 seconds per request
 
 # 1. Tool Implementation
@@ -89,10 +94,17 @@ def call_model(messages):
             return response
         except Exception as e:
             print(f"[WARN] {model} failed ({type(e).__name__}), trying next...")
+            print(f"Error details: {type(e).__name__}: {e}")
+            import traceback
+            traceback.print_exc()   # <- full stack trace for debugging
+            print(f"Error type: {type(e)}")
+            
     raise RuntimeError("All models failed. Check your API key and quota.")
 
 
-# 4. Chat Loop with Tool-Call Round-Trip
+# 4. Agentic Loop with Iteration Guard & Token Tracking
+
+MAX_ITERATIONS = 10
 
 messages = []
 
@@ -115,15 +127,41 @@ while True:
         types.Content(role="user", parts=[types.Part(text=user_text)])
     )
 
-    # First call to the model
-    response = call_model(messages)
+    # Initialize iteration counter and token tracker
+    iteration = 0               # iteration counter
+    total_input_tokens = 0      # input token tracker
+    total_output_tokens = 0     # output token tracker
+    last_response_text = None   # last response text
 
-    # Tool-call loop: keep going while the model wants tools
-    while has_function_calls(response):
+    # Agentic loop
+    while iteration < MAX_ITERATIONS:
+        # Call model and log tokens
+        response = call_model(messages)
+
+        # Extract and accumulate token usage
+        usage = response.usage_metadata
+        turn_input = usage.prompt_token_count or 0
+        turn_output = usage.candidates_token_count or 0
+        total_input_tokens += turn_input
+        total_output_tokens += turn_output
+        print(
+            f"  [TOKENS] Turn {iteration}: "
+            f"input={turn_input}, output={turn_output} | "
+            f"Running total: input={total_input_tokens}, output={total_output_tokens}"
+        )
+
+        # Evaluate — if no tool calls, we have the final answer
+        if not has_function_calls(response):
+            last_response_text = response.text
+            print(f"[MODEL] {last_response_text}\n")
+            # Save final text turn into history
+            messages.append(response.candidates[0].content)
+            break
+
+        # Execute tools and append results
         # Save the model's tool-call turn into history
         messages.append(response.candidates[0].content)
 
-        # Execute every function call in this response
         function_response_parts = []
         for part in response.candidates[0].content.parts:
             if part.function_call:
@@ -154,11 +192,22 @@ while True:
             types.Content(role="user", parts=function_response_parts)
         )
 
-        # Next model turn - it may call more tools or produce text
-        response = call_model(messages)
+        # Safety guard - prevent infinite loops
+        iteration += 1
+        if iteration >= MAX_ITERATIONS:
+            print(
+                f"  [SAFETY] Max iterations ({MAX_ITERATIONS}) reached! "
+                f"Forcing stop to prevent runaway loop."
+            )
+            # Preserve whatever the model last generated
+            last_response_text = (
+                response.text if response.text
+                else "[Agent stopped: max iterations exceeded]"
+            )
+            break
 
-    # Final text response
-    print(f"[MODEL] {response.text}\n")
-
-    # Save the model's final text turn into history
-    messages.append(response.candidates[0].content)
+    # Per-turn summary
+    print(
+        f"  [SUMMARY] Turn finished in {iteration + 1} iteration(s) — "
+        f"Total tokens: input={total_input_tokens}, output={total_output_tokens}\n"
+    )
