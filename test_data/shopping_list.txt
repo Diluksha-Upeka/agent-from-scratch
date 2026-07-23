@@ -1,0 +1,14 @@
+Weekly Shopping List
+
+Fruits:
+- Apples
+- Bananas
+
+Dairy:
+- Milk
+- Butter
+
+Kitchen:
+- Flour
+- Sugar
+- Eggs

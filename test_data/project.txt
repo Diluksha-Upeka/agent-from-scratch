@@ -1,0 +1,11 @@
+Project: Smart Home Assistant
+
+Goal:
+Build an AI assistant that controls home devices.
+
+Deadline:
+September 15
+
+Team:
+Alice - Backend
+Bob - Frontend

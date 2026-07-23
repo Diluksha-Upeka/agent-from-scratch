@@ -1,0 +1,11 @@
+Meeting Notes - July 20
+
+Topics:
+- Discuss Q3 roadmap priorities
+- Review project budget status
+- Assign tasks for next sprint
+
+Action Items:
+- Alice: Prepare budget report
+- Bob: Update timeline document
+- Team: Review customer feedback

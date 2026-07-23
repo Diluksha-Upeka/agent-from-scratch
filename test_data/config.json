@@ -1,0 +1,7 @@
+{
+  "app": "research-agent",
+  "version": "1.2.0",
+  "debug": true,
+  "max_tokens": 2048,
+  "environment": "development"
+}

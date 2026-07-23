@@ -1,0 +1,8 @@
+Q: What is the project deadline?
+A: September 15.
+
+Q: Who manages the project?
+A: Charlie.
+
+Q: Which technology is used?
+A: AI-based automation.

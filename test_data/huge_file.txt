@@ -1,0 +1,197 @@
+This is a huge test file for testing the truncation guard (Scenario B).
+It contains over 50,000 characters of sample data.
+================================================================================
+
+SECTION 1: Project Documentation
+================================================================================
+The Smart Home Assistant project aims to create an AI-powered system that can
+control various home devices including lights, thermostats, door locks, and
+security cameras. The system uses natural language processing to understand
+user commands and execute them through a unified API.
+
+Architecture Overview:
+- Frontend: React-based web dashboard
+- Backend: Python FastAPI server
+- AI Engine: Fine-tuned LLM for intent classification
+- Device Layer: MQTT protocol for device communication
+- Database: PostgreSQL for user data, Redis for caching
+
+Team Members and Responsibilities:
+- Alice (Backend Lead): API design, database schema, authentication
+- Bob (Frontend Lead): Dashboard UI, real-time updates, mobile responsive
+- Charlie (Project Manager): Sprint planning, stakeholder communication
+- Diana (ML Engineer): Model training, intent classification, NER
+- Eve (DevOps): CI/CD pipeline, monitoring, deployment
+
+SECTION 2: Meeting Notes Archive
+================================================================================
+Meeting Date: July 1
+Attendees: Alice, Bob, Charlie
+Topics: Sprint 1 kickoff, task assignment, timeline review
+Action Items: Alice to set up database, Bob to create wireframes
+
+Meeting Date: July 8
+Attendees: Full team
+Topics: Progress review, blocker discussion, demo preparation
+Action Items: Diana to prepare model evaluation report
+
+Meeting Date: July 15
+Attendees: Alice, Charlie, Eve
+Topics: Infrastructure setup, security review, load testing plan
+Action Items: Eve to configure staging environment
+
+SECTION 3: Technical Specifications
+================================================================================
+API Endpoints:
+POST /api/v1/devices/command - Send command to a device
+GET  /api/v1/devices/status  - Get status of all devices
+PUT  /api/v1/devices/{id}    - Update device configuration
+GET  /api/v1/analytics       - Get usage analytics
+POST /api/v1/auth/login      - User authentication
+POST /api/v1/auth/refresh    - Refresh JWT token
+
+Device Types Supported:
+1. Smart Lights - brightness, color, schedule
+2. Thermostat - temperature, mode (heat/cool/auto), schedule
+3. Door Locks - lock/unlock, access log, temporary codes
+4. Security Cameras - live feed, motion detection, recording
+5. Smart Plugs - on/off, energy monitoring, schedules
+6. Window Blinds - open/close, percentage, schedule
+
+SECTION 4: Test Data and Sample Configurations
+================================================================================
+Sample Device Configuration (JSON):
+{
+  "device_id": "light_001",
+  "type": "smart_light",
+  "name": "Living Room Main Light",
+  "location": "living_room",
+  "capabilities": ["brightness", "color", "schedule"],
+  "current_state": {
+    "power": true,
+    "brightness": 75,
+    "color": "#FFE4B5",
+    "schedule": {
+      "on_time": "07:00",
+      "off_time": "23:00"
+    }
+  }
+}
+
+Sample User Commands and Expected Intents:
+"Turn on the living room light" -> intent: device_control, action: power_on
+"Set bedroom temperature to 72" -> intent: device_control, action: set_temperature
+"Lock the front door" -> intent: device_control, action: lock
+"Show me the backyard camera" -> intent: device_view, action: live_feed
+"What's the energy usage today?" -> intent: analytics, action: energy_report
+
+SECTION 5: Budget and Resource Allocation
+================================================================================
+Q3 Budget Breakdown:
+- Cloud Infrastructure: $12,000/month (AWS)
+- API Costs (LLM): $3,500/month
+- Software Licenses: $2,000/month
+- Hardware (test devices): $5,000 (one-time)
+- Team training: $3,000 (one-time)
+Total Q3 Budget: $52,500
+
+Resource Timeline:
+Week 1-2: Infrastructure setup, basic API scaffolding
+Week 3-4: Device integration, MQTT setup
+Week 5-6: AI model training and integration
+Week 7-8: Frontend dashboard, testing
+Week 9-10: Beta testing, bug fixes
+Week 11-12: Production deployment, monitoring
+
+SECTION 6: Known Issues and Bug Tracker
+================================================================================
+BUG-001: Thermostat sometimes reports stale temperature [OPEN]
+BUG-002: Camera feed drops after 30 minutes [IN PROGRESS]
+BUG-003: Door lock API timeout on slow networks [OPEN]
+BUG-004: Dashboard chart rendering issue on Safari [FIXED]
+BUG-005: JWT refresh token race condition [OPEN]
+BUG-006: MQTT reconnection fails after network change [IN PROGRESS]
+BUG-007: Schedule timezone handling incorrect for DST [OPEN]
+BUG-008: Energy monitoring data gaps during peak hours [OPEN]
+
+SECTION 7: Frequently Asked Questions (Internal)
+================================================================================
+Q: What is the project deadline?
+A: The target launch date is September 15, with a two-week buffer until October 1.
+
+Q: Which LLM are we using for intent classification?
+A: We're using a fine-tuned Gemini Flash model, with fallback to a smaller model.
+
+Q: How do we handle device offline scenarios?
+A: The system queues commands and retries when the device comes back online.
+   Users receive a notification about the device status.
+
+Q: What's our uptime SLA target?
+A: 99.9% uptime for the core API, 99.5% for real-time features.
+
+Q: How is user data protected?
+A: All data encrypted at rest (AES-256) and in transit (TLS 1.3).
+   PII is stored in a separate encrypted database partition.
+
+SECTION 8: Filler Data for Truncation Testing
+================================================================================
+The following section contains repeated data to ensure this file exceeds
+the MAX_TOOL_RESULT_LENGTH threshold of 5000 characters.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
+nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore
+eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt
+in culpa qui officia deserunt mollit anim id est laborum.
+
+Paragraph 2: Curabitur pretium tincidunt lacus. Nulla gravida orci a odio.
+Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus
+magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.
+Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit.
+
+Paragraph 3: Etiam sit amet orci eget eros faucibus tincidunt. Duis leo.
+Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat,
+leo eget bibendum sodales, augue velit cursus nunc, quis gravida magna mi a
+libero. Fusce vulputate eleifend sapien. Vestibulum purus quam, scelerisque ut.
+
+Paragraph 4: Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper
+libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel,
+luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt
+tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante.
+
+Paragraph 5: Pellentesque habitant morbi tristique senectus et netus et
+malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.
+Aenean nec lorem. In porttitor. Donec laoreet nonummy augue. Suspendisse dui
+purus, scelerisque at, vulputate vitae, pretium mattis, nunc.
+
+Paragraph 6: Morbi mattis ullamcorper velit. Phasellus gravida semper nisi.
+Nullam vel sem. Pellentesque libero tortor, tincidunt et, tincidunt eget,
+semper nec, quam. Sed hendrerit. Morbi ac felis. Nunc egestas, augue at
+pellentesque laoreet, felis eros vehicula leo, at malesuada velit leo quis
+pede. Donec interdum, metus et hendrerit aliquet, dolor diam sagittis ligula.
+
+Paragraph 7: Nam pretium turpis et arcu. Duis arcu tortor, suscipit eget,
+imperdiet nec, imperdiet iaculis, ipsum. Sed aliquam ultrices mauris. Integer
+ante arcu, accumsan a, consectetuer eget, posuere ut, mauris. Praesent
+adipiscing. Phasellus ullamcorper ipsum rutrum nunc. Nunc nonummy metus.
+
+Paragraph 8: Vestibulum volutpat pretium libero. Cras id dui. Aenean ut eros
+et nisl sagittis vestibulum. Nullam nulla eros, ultricies sit amet, nonummy
+id, imperdiet feugiat, pede. Sed lectus. Donec mollis hendrerit risus. Phasellus
+nec sem in justo pellentesque facilisis. Etiam imperdiet imperdiet orci.
+
+Paragraph 9: Nunc nec neque. Phasellus leo dolor, tempus non, auctor et,
+hendrerit quis, nisi. Curabitur ligula sapien, tincidunt non, euismod vitae,
+posuere imperdiet, leo. Maecenas malesuada. Praesent congue erat at massa.
+Sed cursus turpis vitae tortor. Donec posuere vulputate arcu.
+
+Paragraph 10: Phasellus accumsan cursus velit. Vestibulum ante ipsum primis in
+faucibus orci luctus et ultrices posuere cubilia Curae. Sed aliquam, nisi quis
+porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci.
+Phasellus consectetuer vestibulum elit. Aenean tellus metus, bibendum sed.
+
+================================================================================
+END OF HUGE TEST FILE
+Total approximate size: ~8000+ characters (well above the 5000 char limit)
+================================================================================
