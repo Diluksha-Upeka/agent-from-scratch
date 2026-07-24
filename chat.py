@@ -1,4 +1,5 @@
-import os
+﻿import os
+import json
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
@@ -28,7 +29,7 @@ MODELS = [
     'gemini-3.1-flash-lite',  # confirmed working
 ]
 REQUEST_TIMEOUT = 15_000  # 15 seconds per request
-MAX_TOOL_RESULT_LENGTH = 5000  # ~1250 tokens — truncate tool results beyond this
+MAX_TOOL_RESULT_LENGTH = 5000  # ~1250 tokens â€” truncate tool results beyond this
 
 # 1. Tool Implementation
 
@@ -111,7 +112,7 @@ def search_files(pattern: str) -> str:
         return f"Error searching files: {str(e)}"
 
 
-# Registry: tool name → Python function
+# Registry: tool name â†’ Python function
 TOOL_FUNCTIONS = {
     "calculator": calculator,
     "read_file": read_file,
@@ -276,7 +277,7 @@ while True:
             f"Running total: input={total_input_tokens}, output={total_output_tokens}"
         )
 
-        # Evaluate — if no tool calls, we have the final answer
+        # Evaluate â€” if no tool calls, we have the final answer
         if not has_function_calls(response):
             last_response_text = response.text
             print(f"[MODEL] {last_response_text}\n")
@@ -307,7 +308,7 @@ while True:
                 else:
                     result = f"Error: unknown tool '{fn_name}'"
 
-                # Scenario C: Type validation — ensure result is always a string
+                # Scenario C: Type validation â€” ensure result is always a string
                 if not isinstance(result, str):
                     result = f"Error: tool '{fn_name}' returned {type(result).__name__} instead of str. Value: {result}"
 
@@ -315,7 +316,7 @@ while True:
                 if len(result) > MAX_TOOL_RESULT_LENGTH:
                     original_len = len(result)
                     result = result[:MAX_TOOL_RESULT_LENGTH] + (
-                        f"\n... [TRUNCATED — original was {original_len} chars]"
+                        f"\n... [TRUNCATED â€” original was {original_len} chars]"
                     )
                     print(f"[TOOL] Result truncated: {original_len} -> {MAX_TOOL_RESULT_LENGTH} chars")
 
@@ -349,6 +350,6 @@ while True:
 
     # Per-turn summary
     print(
-        f"  [SUMMARY] Turn finished in {iteration + 1} iteration(s) — "
+        f"  [SUMMARY] Turn finished in {iteration + 1} iteration(s) â€” "
         f"Total tokens: input={total_input_tokens}, output={total_output_tokens}\n"
     )
