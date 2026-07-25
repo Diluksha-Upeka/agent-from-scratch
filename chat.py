@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 
 TEST_DATA_DIR = Path("test_data").resolve()
+MEMORY_FILE = Path("agent_memory.json").resolve()
 
 # Load environment variables
 load_dotenv()
@@ -112,11 +113,29 @@ def search_files(pattern: str) -> str:
         return f"Error searching files: {str(e)}"
 
 
+def save_memory(fact: str) -> str:
+    " " "Saves a fact/note to a JSON file (persistent memory)." " "
+    try:
+        memories = []
+        if MEMORY_FILE.exists():
+            with open(MEMORY_FILE, 'r', encoding='utf-8') as f:
+                memories = json.load(f)
+        
+        memories.append(fact)
+        
+        with open(MEMORY_FILE, 'w', encoding='utf-8') as f:
+            json.dump(memories, f, indent=2)
+            
+        return f"Successfully saved memory: {fact}"
+    except Exception as e:
+        return f"Error saving memory: {str(e)}"
+
 # Registry: tool name â†’ Python function
 TOOL_FUNCTIONS = {
     "calculator": calculator,
     "read_file": read_file,
     "search_files": search_files,
+    "save_memory": save_memory,
 }
 
 # 2. Tool Declaration (Gemini function-calling format)
@@ -353,3 +372,4 @@ while True:
         f"  [SUMMARY] Turn finished in {iteration + 1} iteration(s) â€” "
         f"Total tokens: input={total_input_tokens}, output={total_output_tokens}\n"
     )
+
