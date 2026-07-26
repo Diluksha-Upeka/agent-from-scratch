@@ -1,4 +1,4 @@
-﻿import os
+import os
 import json
 from google import genai
 from google.genai import types
@@ -30,7 +30,7 @@ MODELS = [
     'gemini-3.1-flash-lite',  # confirmed working
 ]
 REQUEST_TIMEOUT = 15_000  # 15 seconds per request
-MAX_TOOL_RESULT_LENGTH = 5000  # ~1250 tokens â€” truncate tool results beyond this
+MAX_TOOL_RESULT_LENGTH = 5000  # ~1250 tokens — truncate tool results beyond this
 
 # 1. Tool Implementation
 
@@ -112,9 +112,8 @@ def search_files(pattern: str) -> str:
     except Exception as e:
         return f"Error searching files: {str(e)}"
 
-
 def save_memory(fact: str) -> str:
-    " " "Saves a fact/note to a JSON file (persistent memory)." " "
+    """Saves a fact/note to a JSON file (persistent memory)."""
     try:
         memories = []
         if MEMORY_FILE.exists():
@@ -130,12 +129,31 @@ def save_memory(fact: str) -> str:
     except Exception as e:
         return f"Error saving memory: {str(e)}"
 
-# Registry: tool name â†’ Python function
+def recall_memory() -> str:
+    """Reads and returns all saved facts from the JSON file."""
+    try:
+        if not MEMORY_FILE.exists():
+            return "No memories saved yet."
+            
+        with open(MEMORY_FILE, 'r', encoding='utf-8') as f:
+            memories = json.load(f)
+            
+        if not memories:
+            return "No memories saved yet."
+            
+        formatted_memories = "\n".join(f"- {m}" for m in memories)
+        return f"Saved Memories:\n{formatted_memories}"
+    except Exception as e:
+        return f"Error recalling memories: {str(e)}"
+
+
+# Registry: tool name → Python function
 TOOL_FUNCTIONS = {
     "calculator": calculator,
     "read_file": read_file,
     "search_files": search_files,
     "save_memory": save_memory,
+    "recall_memory": recall_memory,
 }
 
 # 2. Tool Declaration (Gemini function-calling format)
@@ -215,6 +233,40 @@ search_files_tool = types.Tool(
     ]
 )
 
+save_memory_tool = types.Tool(
+    function_declarations=[
+        types.FunctionDeclaration(
+            name="save_memory",
+            description=(
+                "Saves a fact or note to persistent memory. "
+                "Use this to remember important details, user preferences, or project state across conversations."
+            ),
+            parameters=types.Schema(
+                type="OBJECT",
+                properties={
+                    "fact": types.Schema(
+                        type="STRING",
+                        description="The information or fact to remember.",
+                    ),
+                },
+                required=["fact"],
+            ),
+        )
+    ]
+)
+
+recall_memory_tool = types.Tool(
+    function_declarations=[
+        types.FunctionDeclaration(
+            name="recall_memory",
+            description=(
+                "Reads and returns all saved facts from persistent memory. "
+                "Use this to retrieve previously saved information, user preferences, or context."
+            ),
+        )
+    ]
+)
+
 # 3. Helpers
 
 def has_function_calls(response) -> bool:
@@ -233,7 +285,7 @@ def call_model(messages):
                 model=model,
                 contents=messages,
                 config=types.GenerateContentConfig(
-                    tools=[calculator_tool, read_file_tool, search_files_tool],
+                    tools=[calculator_tool, read_file_tool, search_files_tool, save_memory_tool, recall_memory_tool],
                     http_options=types.HttpOptions(timeout=REQUEST_TIMEOUT),
                 ),
             )
@@ -296,7 +348,7 @@ while True:
             f"Running total: input={total_input_tokens}, output={total_output_tokens}"
         )
 
-        # Evaluate â€” if no tool calls, we have the final answer
+        # Evaluate — if no tool calls, we have the final answer
         if not has_function_calls(response):
             last_response_text = response.text
             print(f"[MODEL] {last_response_text}\n")
@@ -327,7 +379,7 @@ while True:
                 else:
                     result = f"Error: unknown tool '{fn_name}'"
 
-                # Scenario C: Type validation â€” ensure result is always a string
+                # Scenario C: Type validation — ensure result is always a string
                 if not isinstance(result, str):
                     result = f"Error: tool '{fn_name}' returned {type(result).__name__} instead of str. Value: {result}"
 
@@ -335,7 +387,7 @@ while True:
                 if len(result) > MAX_TOOL_RESULT_LENGTH:
                     original_len = len(result)
                     result = result[:MAX_TOOL_RESULT_LENGTH] + (
-                        f"\n... [TRUNCATED â€” original was {original_len} chars]"
+                        f"\n... [TRUNCATED — original was {original_len} chars]"
                     )
                     print(f"[TOOL] Result truncated: {original_len} -> {MAX_TOOL_RESULT_LENGTH} chars")
 
@@ -369,7 +421,6 @@ while True:
 
     # Per-turn summary
     print(
-        f"  [SUMMARY] Turn finished in {iteration + 1} iteration(s) â€” "
+        f"  [SUMMARY] Turn finished in {iteration + 1} iteration(s) — "
         f"Total tokens: input={total_input_tokens}, output={total_output_tokens}\n"
     )
-
