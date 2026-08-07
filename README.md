@@ -70,3 +70,11 @@ Building this agent from scratch illuminated the "magic" behind modern AI assist
 2. **Error Resilience is Critical**: In traditional software, if a function throws an exception, the app crashes. In agentic design, we *want* the LLM to see the exception. By catching errors and feeding them back as standard text, the LLM can debug itself and retry with different arguments.
 3. **The Importance of Context Guards**: Giving an LLM raw access to the file system is dangerous for its context window. A simple truncation guard prevents the model from reading a 10MB file and crashing due to token limits, while still giving it enough information to realize the file was too big.
 4. **Tool Descriptions Matter**: The LLM relies heavily on the `description` fields in the tool schemas. Writing clear, prompt-like instructions in the tool description (e.g., *"Use this for ANY arithmetic calculation..."*) directly dictates how effectively the agent uses its toolbox.
+
+## Part of a series
+
+This repo is the **orchestration layer** of a three-part exploration of the LLM stack, from math to product:
+
+1. **[llm-stack-from-scratch](https://github.com/Diluksha-Upeka/llm-stack-from-scratch)** — the primitives layer: attention, retrieval, chunking, clustering, and IVF index in pure NumPy.
+2. **agent-from-scratch** (this repo) — the orchestration layer: an agentic loop with tool calling and persistent memory, no framework.
+3. **[ContextIQ](https://github.com/Diluksha-Upeka/contextiq-rag)** ([live demo](https://contextiq-rag.vercel.app/)) — the product layer: a full RAG app (FastAPI + Gemini + Pinecone) with cited, grounded answers over PDFs.
